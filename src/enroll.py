@@ -17,5 +17,9 @@ ph = PasswordHasher()
 username = args.username
 password = ph.hash(args.password)
 
-db.add_user(username, password)
-print(f"exists? {db.user_exists(username)}")
+if db.add_user(username, password):
+    print("accepted")
+    sys.exit(0)
+else:
+    print("rejected")
+    sys.exit(-1)
