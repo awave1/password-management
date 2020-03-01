@@ -2,7 +2,6 @@ from argon_hasher import ArgonHasher
 from db import Database
 import sys
 import argparse
-import re
 
 
 def is_valid_password(password):
@@ -49,11 +48,11 @@ def enroll(username, password):
     argon2 = ArgonHasher()
 
     def accept_state():
-        print("accepted")
+        print("accepted.")
         sys.exit(0)
 
     def reject_state():
-        print("rejected")
+        print("rejected.")
         sys.exit(-1)
 
     if not is_valid_password(password):
