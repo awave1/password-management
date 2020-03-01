@@ -30,15 +30,23 @@ class Database:
             return False
 
     def get_user(self, username):
-        self.cursor.execute("select * from users where username=?", (username,))
+        """
+        Get a user with specified username from the database
+        
+        Arguments:
+            username {str} -- username
+        
+        Returns:
+            (str, str) -- user information, username and password hash
+        """
+
+        self.cursor.execute(
+            "select username, password from users where username=?", (username,)
+        )
         self.connection.commit()
 
         result = self.cursor.fetchone()
-        if result:
-            (_, username, pwd_hash) = result
-            return (username, pwd_hash)
-
-        return (None, None)
+        return result
 
     def __create_tables(self):
         self.cursor.execute(
@@ -50,3 +58,4 @@ class Database:
             )
             """
         )
+        self.connection.commit()

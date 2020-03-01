@@ -2,6 +2,7 @@ from argon2.low_level import verify_secret, hash_secret, Type
 import argon2.exceptions
 import os
 
+# argon2 defaults
 DEFAULT_SALT_LEN = 16
 DEFAULT_HASH_LEN = 16
 DEFAULT_TIME_COST = 2
@@ -37,11 +38,22 @@ class ArgonHasher:
         self.hash_encoding = hash_encoding
 
     def hash(self, string):
+        """
+        Hash a provided string using argon2id
+        
+        Arguments:
+            string {str} -- string you want to hash
+        
+        Returns:
+            str -- argon2 hash of the given string
+        """
+
         encoded_str = string.encode(self.string_encoding)
 
         # random salt, 16 bytes long
         salt = os.urandom(self.salt_len)
 
+        # hash the given string using argon2id algorithm
         result = hash_secret(
             secret=encoded_str,
             salt=salt,
@@ -55,6 +67,17 @@ class ArgonHasher:
         return result.decode(self.hash_encoding)
 
     def verify(self, hash, actual_string):
+        """
+        Verify hash against the plaintext string
+        
+        Arguments:
+            hash {str} -- hash string
+            actual_string {str} -- string you want to check
+        
+        Returns:
+            bool -- true, if given hash corresponds to the string
+        """
+
         try:
             return verify_secret(
                 hash.encode(self.hash_encoding),
@@ -62,4 +85,5 @@ class ArgonHasher:
                 Type.ID,
             )
         except argon2.exceptions.VerifyMismatchError:
+            # if mismatch error occured, return False
             return False
