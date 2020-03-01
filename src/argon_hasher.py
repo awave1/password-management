@@ -1,10 +1,11 @@
 from argon2.low_level import verify_secret, hash_secret, Type
+import argon2.exceptions
 import os
 
 DEFAULT_SALT_LEN = 16
 DEFAULT_HASH_LEN = 16
 DEFAULT_TIME_COST = 2
-DEFAULT_MEM_COST = 1000000
+DEFAULT_MEM_COST = 100000
 DEFAULT_PARALLELISM = 8
 DEFAULT_STRING_ENCODING = "utf-8"
 DEFAULT_HASH_ENCODING = "ascii"
@@ -54,8 +55,11 @@ class ArgonHasher:
         return result.decode(self.hash_encoding)
 
     def verify(self, hash, actual_string):
-        return verify_secret(
-            hash.encode(self.hash_encoding),
-            actual_string.encode(self.string_encoding),
-            Type.ID,
-        )
+        try:
+            return verify_secret(
+                hash.encode(self.hash_encoding),
+                actual_string.encode(self.string_encoding),
+                Type.ID,
+            )
+        except argon2.exceptions.VerifyMismatchError:
+            return False
