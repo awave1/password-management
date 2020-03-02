@@ -4,9 +4,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [scripts]
-enroll = "python src/enroll.py"
-authenticate = "python src/authenticate.py"
-test = "echo TODO"
+enroll = "python password_management/enroll.py"
+authenticate = "python password_management/authenticate.py"
+test = "python test/runner.py"
 
 [dev-packages]
 black = "*"
