@@ -1,4 +1,8 @@
-from password_management import ArgonHasher, Database, constants
+#!/usr/bin/env python3
+
+from .argon_hasher import ArgonHasher
+from .db import Database
+from . import constants
 import sys
 import argparse
 

@@ -1,4 +1,8 @@
-from password_management import ArgonHasher, Database, constants
+#!/usr/bin/env python3
+
+from .argon_hasher import ArgonHasher
+from .db import Database
+from . import constants
 import sys
 import sqlite3
 import argparse
@@ -11,22 +15,24 @@ class Authenticate:
 
     def authenticate(self, username, password):
         user = self.db.get_user(username)
+        print(user)
 
         if user is None:
+            print("user is none")
             self.__deny_state()
 
-        (_, pwd_hash) = user
-        if not self.argon2.verify(pwd_hash, password):
+        if not self.argon2.verify(user[1], password):
+            print("wrong hash?")
             self.__deny_state()
 
         self.__accept_state()
 
     def __accept_state(self):
-        print(constants.AUTH_ERR)
+        print(constants.AUTH_OK)
         sys.exit(constants.STATUS_OK)
 
     def __deny_state(self):
-        print(constants.AUTH_OK)
+        print(constants.AUTH_ERR)
         sys.exit(constants.STATUS_ERR)
 
 

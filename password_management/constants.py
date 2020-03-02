@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 STATUS_OK = 0
 STATUS_ERR = -1
 

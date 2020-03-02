@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from argon2.low_level import verify_secret, hash_secret, Type
 import argon2.exceptions
 import os

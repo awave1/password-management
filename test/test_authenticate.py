@@ -1,9 +1,14 @@
+#!/usr/bin/env python3
+
 import unittest
 import os
 from unittest.mock import patch
 from io import StringIO
-from context import password_management
-from password_management import Authenticate, Enroll, Database, constants
+import password_management
+import password_management.constants as constants
+from password_management.authenticate import Authenticate
+from password_management.enroll import Enroll
+from password_management.db import Database
 
 
 class AuthenticateTest(unittest.TestCase):
@@ -30,13 +35,13 @@ class AuthenticateTest(unittest.TestCase):
 
                 with self.assertRaises(SystemExit) as sys_exit:
                     enroller.enroll(username, password)
-                    self.assertEquals(sys_exit.exception.code, constants.STATUS_OK)
-                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_OK)
+                    self.assertEqual(sys_exit.exception.code, constants.STATUS_OK)
+                    self.assertEqual(out.getvalue().strip(), constants.ENROLL_OK)
 
                 with self.assertRaises(SystemExit) as sys_exit:
                     authenticator.authenticate(username, password)
-                    self.assertEquals(sys_exit.exception.code, constants.STATUS_OK)
-                    self.assertEquals(out.getvalue().strip(), constants.AUTH_OK)
+                    self.assertEqual(sys_exit.exception.code, constants.STATUS_OK)
+                    self.assertEqual(out.getvalue().strip(), constants.AUTH_OK)
 
     def test_should_fail_to_authenticate_existing_user_with_wrong_password(self):
         """Should fail to authenticate existing user with wring password
@@ -51,8 +56,8 @@ class AuthenticateTest(unittest.TestCase):
 
                 with self.assertRaises(SystemExit) as sys_exit:
                     authenticator.authenticate(username, password)
-                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
-                    self.assertEquals(out.getvalue().strip(), constants.AUTH_ERR)
+                    self.assertEqual(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEqual(out.getvalue().strip(), constants.AUTH_ERR)
 
     def test_should_successfully_authenticate_existsing_user(self):
         """Should successfully authenticate existsing user
@@ -67,8 +72,8 @@ class AuthenticateTest(unittest.TestCase):
 
                 with self.assertRaises(SystemExit) as sys_exit:
                     authenticator.authenticate(username, password)
-                    self.assertEquals(sys_exit.exception.code, constants.STATUS_OK)
-                    self.assertEquals(out.getvalue().strip(), constants.AUTH_OK)
+                    self.assertEqual(sys_exit.exception.code, constants.STATUS_OK)
+                    self.assertEqual(out.getvalue().strip(), constants.AUTH_OK)
 
     def test_should_fail_to_authenticate_unknown_user(self):
         """Should fail to authenticate unknown user
@@ -83,8 +88,8 @@ class AuthenticateTest(unittest.TestCase):
 
                 with self.assertRaises(SystemExit) as sys_exit:
                     authenticator.authenticate(username, password)
-                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
-                    self.assertEquals(out.getvalue().strip(), constants.AUTH_ERR)
+                    self.assertEqual(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEqual(out.getvalue().strip(), constants.AUTH_ERR)
 
 
 if __name__ == "__main__":
