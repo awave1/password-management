@@ -10,12 +10,12 @@ class Authenticate:
         self.argon2 = ArgonHasher()
 
     def authenticate(self, username, password):
+        user = self.db.get_user(username)
 
-        (user, pwd_hash) = self.db.get_user(username)
-
-        if user is None or pwd_hash is None:
+        if user is None:
             self.__deny_state()
 
+        (_, pwd_hash) = user
         if not self.argon2.verify(pwd_hash, password):
             self.__deny_state()
 

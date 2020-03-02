@@ -1,5 +1,7 @@
 import unittest
 import os
+from unittest.mock import patch
+from io import StringIO
 from context import password_management
 from password_management import Enroll, Database, constants
 
@@ -15,103 +17,118 @@ class EnrollTest(unittest.TestCase):
         return super().tearDownClass()
 
     def test_should_create_a_new_user(self):
-        """Enrolls a new user with a secure password
+        """Should successfully enroll a new user with secure password
         """
 
-        username = "john doe"
-        password = "s3cur3"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "john doe"
+            password = "s3cur3"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
 
-            self.assertEqual(sys_exit.exception.code, constants.STATUS_OK)
-            db.remove(username)
+                self.assertEquals(sys_exit.exception.code, constants.STATUS_OK)
+                self.assertEquals(out.getvalue().strip(), constants.ENROLL_OK)
+                db.remove(username)
 
     def test_should_create_new_user_and_throw_when_enrolling_again(self):
-        """Fails to enroll the same user twice
+        """Should enroll a new user and then should fail to enroll it again
         """
 
-        username = "john doe"
-        password = "s3cur3"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "john doe"
+            password = "s3cur3"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit_succ:
-                enroller.enroll(username, password)
-                self.assertEqual(sys_exit_succ.exception.code, constants.STATUS_OK)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit_succ:
+                    enroller.enroll(username, password)
+                    self.assertEqual(sys_exit_succ.exception.code, constants.STATUS_OK)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_OK)
 
-            with self.assertRaises(SystemExit) as sys_exit_fail:
-                enroller.enroll(username, password)
-                self.assertEqual(sys_exit_fail.exception.code, constants.STATUS_ERR)
+                with self.assertRaises(SystemExit) as sys_exit_fail:
+                    enroller.enroll(username, password)
+                    self.assertEqual(sys_exit_fail.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
-            db.remove(username)
+                db.remove(username)
 
     def test_should_reject_number_password(self):
-        """Fails to enroll a user with weak password
+        """Should fail to enroll a user with a weak (numbers only) password
         """
 
-        username = "john doe"
-        password = "123456"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "john doe"
+            password = "123456"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
-                self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
+                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
     def test_should_reject_dictionary_password(self):
-        """Fails to enroll a new user with a dictionary password
+        """Should fail to enroll a user with a weak password - dictionary word
         """
 
-        username = "batka"
-        password = "byelorussia"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "batka"
+            password = "byelorussia"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
-                self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
+                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
     def test_should_reject_dictionary_password_followed_by_num(self):
-        """Fails to enroll a new user with a dictionary password followed by a number
+        """Should fail to enroll a user with a weak password - dictionary word followed by a number
         """
 
-        username = "batka"
-        password = "byelorussia1"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "batka"
+            password = "byelorussia1"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
-                self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
+                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
     def test_should_reject_dictionary_password_preceded_by_num(self):
-        """Fails to enroll a new user with a dictionary password preceded by a number
+        """Should fail to enroll a user with a weak password - dictionary word preceded by a number
         """
 
-        username = "batka"
-        password = "1byelorussia"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "batka"
+            password = "1byelorussia"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
-                self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
+                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
     def test_should_reject_dictionary_password_surrounded_by_nums(self):
-        """Fails to enroll a new user with a dictionary password surrounded by numbers
+        """Should fail to enroll a user with a weak password - dictionary word surrounded by numbers
         """
 
-        username = "batka"
-        password = "1byelorussia234"
+        with patch("sys.stdout", new=StringIO()) as out:
+            username = "batka"
+            password = "1byelorussia234"
 
-        with Database(self.db_name) as db:
-            enroller = Enroll(db)
-            with self.assertRaises(SystemExit) as sys_exit:
-                enroller.enroll(username, password)
-                self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+            with Database(self.db_name) as db:
+                enroller = Enroll(db)
+                with self.assertRaises(SystemExit) as sys_exit:
+                    enroller.enroll(username, password)
+                    self.assertEquals(sys_exit.exception.code, constants.STATUS_ERR)
+                    self.assertEquals(out.getvalue().strip(), constants.ENROLL_ERR)
 
 
 if __name__ == "__main__":
