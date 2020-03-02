@@ -1,9 +1,12 @@
 import unittest
+from enroll_test import EnrollTest
+from authenticate_test import AuthenticateTest
 
+loader = unittest.TestLoader()
+test_suite = unittest.TestSuite()
 
-class PasswordManagementTest(unittest.TestSuite):
-    pass
+test_suite.addTest(loader.loadTestsFromTestCase(EnrollTest))
+test_suite.addTest(loader.loadTestsFromTestCase(AuthenticateTest))
 
-
-if __name__ == "__main__":
-    unittest.main()
+runner = unittest.TextTestRunner(verbosity=3)
+result = runner.run(test_suite)

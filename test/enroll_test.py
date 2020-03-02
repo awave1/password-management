@@ -26,7 +26,7 @@ class EnrollTest(unittest.TestCase):
             with self.assertRaises(SystemExit) as sys_exit:
                 enroller.enroll(username, password)
 
-            self.assertEqual(sys_exit.exception.code, 0)
+            self.assertEqual(sys_exit.exception.code, constants.STATUS_OK)
             db.remove(username)
 
     def test_should_create_new_user_and_throw_when_enrolling_again(self):

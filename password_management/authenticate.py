@@ -16,7 +16,7 @@ class Authenticate:
         if user is None or pwd_hash is None:
             self.__deny_state()
 
-        if not argon2.verify(pwd_hash, password):
+        if not self.argon2.verify(pwd_hash, password):
             self.__deny_state()
 
         self.__accept_state()
