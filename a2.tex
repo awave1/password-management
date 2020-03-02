@@ -73,7 +73,7 @@ Implemented in the current directory.
 
     Forward secrecy is a feature that guarantees that the session keys will not be compromised if the private keys is compromised. That means, for every session initiated by users, a new unique session key would need to be generated.
 
-    Kerberos aims to be fast, adding forward secrecy would slow down the algorithm as it will introduce additional overhead. From \href{https://tools.ietf.org/html/rfc4120}{Kerberos RFC}, "Applications requiring perfect forward secrecy must exchange keys through mechanisms that provide such assurance, but may use Kerberos for authentication of the encrypted channel established through such other means."
+    Kerberos aims to be fast, adding forward secrecy would slow down the algorithm as it will introduce additional overhead. From \href{https://tools.ietf.org/html/rfc4120}{Kerberos RFC}, `` Applications requiring perfect forward secrecy must exchange keys through mechanisms that provide such assurance, but may use Kerberos for authentication of the encrypted channel established through such other means.''
 
     Leaking $K_{C}$ (q. 2.3) would compromise the communication between client and TGS and any network service $V$. If an active eavesdropper records the traffic, they could decrypt the message now that they know the secret key.
 
@@ -89,7 +89,7 @@ Implemented in the current directory.
       \item $\dots$ The rest of Kerberos
     \end{enumerate}
 
-    Now $C$ and $AS$ share secret $g^{ab}$, thus providing Kerberos with perfect forward secrecy.
+    The steps are performed for every possible communication. $C$ and $AS$ share secret $g^{ab}$, thus providing Kerberos with perfect forward secrecy.
 
 \end{enumerate}
 
