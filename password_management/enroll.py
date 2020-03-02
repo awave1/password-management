@@ -1,4 +1,4 @@
-from password_management import ArgonHasher, Database
+from password_management import ArgonHasher, Database, constants
 import sys
 import argparse
 
@@ -19,12 +19,12 @@ class Enroll:
             return self.__reject_state()
 
     def __accept_state(self):
-        print("accepted.")
-        sys.exit(0)
+        print(constants.ENROLL_OK)
+        sys.exit(constants.STATUS_OK)
 
     def __reject_state(self):
-        print("rejected.")
-        sys.exit(-1)
+        print(constants.ENROLL_ERR)
+        sys.exit(constants.STATUS_ERR)
 
     @staticmethod
     def is_valid_password(password):

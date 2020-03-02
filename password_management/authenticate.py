@@ -1,12 +1,12 @@
-from password_management import ArgonHasher, Database
+from password_management import ArgonHasher, Database, constants
 import sys
 import sqlite3
 import argparse
 
 
 class Authenticate:
-    def __init__(self):
-        self.db = Database()
+    def __init__(self, db):
+        self.db = db
         self.argon2 = ArgonHasher()
 
     def authenticate(self, username, password):
@@ -22,12 +22,12 @@ class Authenticate:
         self.__accept_state()
 
     def __accept_state(self):
-        print("access granted.")
-        sys.exit(0)
+        print(constants.AUTH_ERR)
+        sys.exit(constants.STATUS_OK)
 
     def __deny_state(self):
-        print("access denied.")
-        sys.exit(-1)
+        print(constants.AUTH_OK)
+        sys.exit(constants.STATUS_ERR)
 
 
 if __name__ == "__main__":
@@ -36,4 +36,5 @@ if __name__ == "__main__":
     parser.add_argument("password", type=str, help="Password")
     args = parser.parse_args()
 
-    Authenticate().authenticate(args.username, args.password)
+    with Database() as db:
+        Authenticate(db).authenticate(args.username, args.password)
