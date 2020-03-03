@@ -100,7 +100,7 @@ pipenv run test
 ### `virtualenv`
 
 ```sh
-python test/runner.py
+python -m test.runner
 ```
 
 ## Author
