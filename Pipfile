@@ -6,7 +6,7 @@ verify_ssl = true
 [scripts]
 enroll = "python -m password_management.enroll"
 authenticate = "python -m password_management.authenticate"
-test = "python -m unittest discover"
+test = "python -m test.runner"
 
 [dev-packages]
 black = "*"

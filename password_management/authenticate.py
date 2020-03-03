@@ -14,15 +14,20 @@ class Authenticate:
         self.argon2 = ArgonHasher()
 
     def authenticate(self, username, password):
+        """Verify that a user with a given username exists
+        and if it exists, verify the hash of the provided password against the hash stored in the database
+        
+        Arguments:
+            username {str} -- username
+            password {str} -- password
+        """
         user = self.db.get_user(username)
         print(user)
 
         if user is None:
-            print("user is none")
             self.__deny_state()
 
         if not self.argon2.verify(user[1], password):
-            print("wrong hash?")
             self.__deny_state()
 
         self.__accept_state()

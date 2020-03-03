@@ -40,8 +40,7 @@ class ArgonHasher:
         self.hash_encoding = hash_encoding
 
     def hash(self, string):
-        """
-        Hash a provided string using argon2id
+        """Hash a provided string using argon2id
         
         Arguments:
             string {str} -- string you want to hash
@@ -69,8 +68,7 @@ class ArgonHasher:
         return result.decode(self.hash_encoding)
 
     def verify(self, hash, actual_string):
-        """
-        Verify hash against the plaintext string
+        """Verify hash against the plaintext string
         
         Arguments:
             hash {str} -- hash string
