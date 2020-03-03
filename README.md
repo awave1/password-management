@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-The project uses [Pipenv](https://github.com/pypa/pipenv) to make it easier dealing with dependencies. Follow the 
+The project uses [Pipenv](https://github.com/pypa/pipenv) to make it easier dealing with dependencies.
 
 ### Using `pipenv`
 
@@ -80,13 +80,13 @@ pipenv run authenticate <username> <password>
 To run `enroll` program:
 
 ```sh
-python password_management/enroll <username> <password>
+python -m password_management.enroll <username> <password>
 ```
 
 To run `authenticate` program:
 
 ```sh
-pipenv password_management/authenticate <username> <password>
+python -m password_management.authenticate <username> <password>
 ```
 
 ## Run tests
